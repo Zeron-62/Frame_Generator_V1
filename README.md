@@ -1,25 +1,47 @@
-# FrameForge In-Between
+# Frame_Generator_V1
 
-**Local AI frame-by-frame in-between generator for ComfyUI.**
+Local AI frame-by-frame image generation from a first frame, last frame, and action prompt using ComfyUI.
 
-FrameForge takes a **first image**, **last image**, and an **action/motion prompt**, then generates the images between them as individual PNG frames.
+![Frame_Generator_V1 frame generation](docs/images/frame-sequence.png)
 
-> **This project generates images, not video.** It does not use a video-generation model and it does not export MP4 files.
+## What is Frame_Generator_V1?
 
-## What FrameForge is for
+Frame_Generator_V1 is a local AI tool for generating individual in-between PNG frames between two supplied images.
 
-FrameForge is designed for workflows such as anime/manga motion design, 2D character animation, pose transitions, and keyframe-based image sequences where you already have the beginning and ending artwork.
+Instead of generating an MP4 directly, the application generates the intermediate frames as separate images that can be imported into video or animation software.
 
-Example:
+## Features
+
+- First-frame and last-frame input
+- Action/motion prompt
+- AI-generated in-between PNG frames
+- SD 1.5 support
+- IP-Adapter conditioning
+- Seed control
+- Resolution control
+- FPS and duration controls
+- Adjustable denoise and guidance
+- 8 GB VRAM mode
+- ComfyUI integration
+- PNG sequence export
+
+## Requirements
+
+- Windows
+- NVIDIA GPU
+- 8 GB VRAM recommended minimum for the included SD 1.5 profile
+- 32 GB system RAM recommended
+- ComfyUI Desktop
+- Python dependencies listed in `requirements.txt`
+
+## How It Works
 
 ```text
-First frame ──┐
-              │
-Action prompt ├──► FrameForge ──► PNG frame sequence
-              │
-Last frame ───┘
-```
-
+First Frame ─────┐
+                 │
+Action Prompt ───┼──> Frame_Generator_V1 ──> AI In-Between Frames
+                 │
+Last Frame ──────┘
 The first and last images are preserved as the endpoints. The middle images are generated independently with diffusion, using both endpoint images as visual conditions.
 
 ## Current approach
@@ -59,17 +81,6 @@ Recommended starting point:
 
 A long sequence is expensive because **each in-between frame is a separate image-generation job**. The app limits a single job to 120 total frames.
 
-## Requirements
-
-- Windows 10/11
-- Python 3.11+
-- NVIDIA GPU recommended; the initial profile is tuned for 8 GB VRAM
-- ComfyUI Desktop or another local ComfyUI server
-- `ComfyUI_IPAdapter_plus`
-- An SD 1.5 checkpoint
-- SD 1.5 IP-Adapter Plus weights
-- CLIP Vision ViT-H weights
-
 ## Installation
 
 ### 1. Install ComfyUI
@@ -106,7 +117,7 @@ ComfyUI/models/clip_vision/
 
 See [`docs/MODELS.md`](docs/MODELS.md) for the exact files and official sources.
 
-### 4. Install FrameForge
+### 4. Install Frame_Generator_V1
 
 Open Command Prompt in the project folder and run:
 
@@ -114,7 +125,7 @@ Open Command Prompt in the project folder and run:
 install.bat
 ```
 
-Then start FrameForge:
+Then start Frame_Generator_V1:
 
 ```bat
 run.bat
@@ -126,9 +137,9 @@ The web UI opens on:
 http://127.0.0.1:7860
 ```
 
-### 5. Connect FrameForge to ComfyUI
+### 5. Connect Frame_Generator_V1 to ComfyUI
 
-Open **Setup** in FrameForge.
+Open **Setup** in Frame_Generator_V1.
 
 Keep:
 
@@ -186,7 +197,7 @@ Runtime/output directories are ignored by Git and should not be committed.
 ## GitHub repository layout
 
 ```text
-FrameForge-In-Between/
+Frame_Generator_V1/
 ├── app.py
 ├── config.json
 ├── requirements.txt
@@ -234,12 +245,12 @@ python -m py_compile app.py
 
 ## Project status
 
-FrameForge is an **experimental local tool**. The core objective is controllable image-by-image keyframe generation from two endpoint images. Visual consistency can vary with the checkpoint, prompt, reference art, and conditioning settings.
+Frame_Generator_V1 is an **experimental local tool**. The core objective is controllable image-by-image keyframe generation from two endpoint images. Visual consistency can vary with the checkpoint, prompt, reference art, and conditioning settings.
 
 This repository is intentionally focused on the local image-generation pipeline rather than video generation.
 
 ## License
 
-The FrameForge project code is released under the MIT License. See [`LICENSE`](LICENSE).
+The Frame_Generator_V1 project code is released under the MIT License. See [`LICENSE`](LICENSE).
 
 Third-party software, model weights, and node packages remain under their own licenses and terms. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
