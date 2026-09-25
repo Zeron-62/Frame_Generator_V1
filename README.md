@@ -1,68 +1,160 @@
 # Frame_Generator_V1
 
-Local AI frame-by-frame image generation from a first frame, last frame, and action prompt using ComfyUI.
+> **Local AI frame-by-frame image generation from a first frame, last frame, and action prompt — powered by ComfyUI.**
 
-![Frame_Generator_V1 frame generation](docs/images/frame-sequence.png)
+![Frame_Generator_V1 frame sequence](docs/images/frame-sequence.png)
 
-## What is Frame_Generator_V1?
+### ✨ What it does
 
-Frame_Generator_V1 is a local AI tool for generating individual in-between PNG frames between two supplied images.
-
-Instead of generating an MP4 directly, the application generates the intermediate frames as separate images that can be imported into video or animation software.
-
-## Features
-
-- First-frame and last-frame input
-- Action/motion prompt
-- AI-generated in-between PNG frames
-- SD 1.5 support
-- IP-Adapter conditioning
-- Seed control
-- Resolution control
-- FPS and duration controls
-- Adjustable denoise and guidance
-- 8 GB VRAM mode
-- ComfyUI integration
-- PNG sequence export
-
-## Requirements
-
-- Windows
-- NVIDIA GPU
-- 8 GB VRAM recommended minimum for the included SD 1.5 profile
-- 32 GB system RAM recommended
-- ComfyUI Desktop
-- Python dependencies listed in `requirements.txt`
-
-## How It Works
+Give Frame_Generator_V1 a **first frame**, a **last frame**, and an **action prompt**. It generates the intermediate images as individual PNG frames that you can use in your animation or video workflow.
 
 ```text
-First Frame ─────┐
-                 │
-Action Prompt ───┼──> Frame_Generator_V1 ──> AI In-Between Frames
-                 │
-Last Frame ──────┘
-The first and last images are preserved as the endpoints. The middle images are generated independently with diffusion, using both endpoint images as visual conditions.
+ First Frame ─────┐
+                  │
+ Action Prompt ───┼──► Frame_Generator_V1 ───► AI In-Between PNG Frames
+                  │
+ Last Frame ──────┘
+```
 
-## Current approach
+> **Not a video generator.** The core output is an image sequence: the first and last images are your endpoints, and the middle images are generated individually.
 
-Version 4 builds on the v3 prototype with a GitHub-ready project layout and clearer terminology around the frame-conditioning pipeline.
+---
 
-The generation pipeline can combine:
+## 🌟 Features
 
-- weighted first-frame and last-frame IP-Adapter embeddings
-- an adaptive denoise schedule that is lower near the endpoints and higher toward the middle
-- a hidden endpoint guide used only as an img2img starting point
-- an optional low-weight previous-frame reference for temporal continuity
-- configurable transition curves
+| Feature | Description |
+|---|---|
+| 🖼️ First + Last Frame | Supply both endpoint images |
+| ✍️ Action Prompt | Describe the motion or pose change |
+| 🤖 AI In-Between Frames | Generate individual middle frames with diffusion |
+| 🎛️ Generation Controls | Seed, steps, CFG, denoise, conditioning and consistency |
+| 📐 Resolution Control | Choose the output image size |
+| 🎞️ FPS + Duration | Automatically calculate the required frame count |
+| 🔗 IP-Adapter Conditioning | Use endpoint images as visual references |
+| 🧩 ComfyUI Integration | Runs through a local ComfyUI API |
+| 🖥️ 8 GB VRAM Profile | Includes a conservative SD 1.5 starting profile |
+| 📦 PNG Sequence Export | Export all frames or only generated in-between frames |
+| 🔍 Preview Frames | Test selected transition positions before rendering a full sequence |
 
-The hidden guide is **not exported as a frame**. No frame interpolation or cross-fade is used as the final output.
+---
 
-## Hardware target
+## 🖥️ Example Result
 
-The first profile is intended for an NVIDIA GPU around **8 GB VRAM** and **32 GB system RAM**.
+**Start image → AI-generated in-between frames → End image**
 
-Recommended starting point:
+![Example frame sequence](docs/images/frame-sequence.png)
+
+---
+
+## 🧰 Requirements
+
+- **Windows**
+- **NVIDIA GPU**
+- **8 GB VRAM recommended minimum** for the included SD 1.5 profile
+- **32 GB system RAM recommended**
+- **ComfyUI Desktop** or a local ComfyUI server
+- Python dependencies listed in `requirements.txt`
+
+---
+
+## 🚀 Installation
+
+### 1. Install and start ComfyUI
+
+Install **ComfyUI Desktop** or run a local ComfyUI server.
+
+Frame_Generator_V1 connects to ComfyUI through its local HTTP API, so the ComfyUI Desktop installation directory does **not** need to be configured in Frame_Generator_V1.
+
+Default ComfyUI URL:
+
+```text
+http://127.0.0.1:8188
+```
+
+### 2. Install the IP-Adapter node
+
+In ComfyUI Manager / Extensions, install:
+
+```text
+ComfyUI_IPAdapter_plus
+```
+
+Restart ComfyUI after installation.
+
+### 3. Install the required models
+
+Frame_Generator_V1 does not distribute model weights.
+
+Install the required checkpoint, IP-Adapter, and CLIP Vision files in the model directories used by your ComfyUI installation.
+
+See [`docs/MODELS.md`](docs/MODELS.md) for the exact files and sources.
+
+### 4. Install Frame_Generator_V1
+
+Open Command Prompt in the project folder:
+
+```bat
+install.bat
+```
+
+Then start the application:
+
+```bat
+run.bat
+```
+
+The web UI opens at:
+
+```text
+http://127.0.0.1:7860
+```
+
+### 5. Connect to ComfyUI
+
+Open **Setup** in Frame_Generator_V1.
+
+Keep the default URL unless you changed the ComfyUI port:
+
+```text
+http://127.0.0.1:8188
+```
+
+Click:
+
+**Save & Test Connection → Refresh model lists**
+
+---
+
+## 🎬 How to Generate Frames
+
+1. Upload the **First frame**.
+2. Upload the **Last frame**.
+3. Enter an **Action / motion prompt**.
+4. Select the checkpoint, IP-Adapter model, and CLIP Vision model.
+5. Set resolution, FPS, duration, seed, steps, CFG, conditioning and consistency.
+6. Use **Preview One Frame** at 25%, 50% or 75% when available.
+7. Generate the PNG sequence.
+
+### Example prompt
+
+```text
+The girl slowly turns her head from left to right,
+her hair gently moving in the wind,
+natural pose progression,
+consistent character, clothing, camera, and background.
+```
+
+For a **2-second sequence at 12 FPS**:
+
+```text
+24 total frames
+22 AI-generated in-between frames
+2 original endpoint frames
+```
+
+---
+
+## 🎛️ Recommended 8 GB VRAM Starting Profile
 
 | Setting | Starting value |
 |---|---:|
@@ -78,106 +170,31 @@ Recommended starting point:
 | Previous-frame consistency | 0.16 |
 | Previous-frame guide anchor | 0.10 |
 | Transition curve | Smoothstep |
+| 8 GB VRAM mode | Enabled |
 
-A long sequence is expensive because **each in-between frame is a separate image-generation job**. The app limits a single job to 120 total frames.
+> Every in-between frame is a separate image-generation job. Larger resolutions, longer durations and higher frame counts increase generation time and memory use.
 
-## Installation
+---
 
-### 1. Install ComfyUI
+## 🧠 Current Conditioning Approach
 
-Install and start ComfyUI Desktop (or run a local ComfyUI server).
+The current prototype can combine:
 
-FrameForge connects over the ComfyUI HTTP API, so **you do not need to configure the ComfyUI Desktop installation directory**.
+- weighted first-frame and last-frame IP-Adapter embeddings
+- an adaptive denoise schedule that is lower near endpoints and higher toward the middle
+- a hidden endpoint guide used only as an img2img starting point
+- an optional low-weight previous-frame reference for temporal continuity
+- configurable transition curves
 
-Default URL:
+The hidden guide is **not exported as a frame**.
 
-```text
-http://127.0.0.1:8188
-```
+**No frame interpolation or cross-fade is used as the final output.**
 
-### 2. Install the IP-Adapter node
+---
 
-In ComfyUI Manager/Extensions, install:
+## 📦 Output
 
-```text
-ComfyUI_IPAdapter_plus
-```
-
-Restart ComfyUI after installation.
-
-### 3. Install model files
-
-Place the required model files into the model directories used by your ComfyUI installation. Typical paths are:
-
-```text
-ComfyUI/models/checkpoints/
-ComfyUI/models/ipadapter/
-ComfyUI/models/clip_vision/
-```
-
-See [`docs/MODELS.md`](docs/MODELS.md) for the exact files and official sources.
-
-### 4. Install Frame_Generator_V1
-
-Open Command Prompt in the project folder and run:
-
-```bat
-install.bat
-```
-
-Then start Frame_Generator_V1:
-
-```bat
-run.bat
-```
-
-The web UI opens on:
-
-```text
-http://127.0.0.1:7860
-```
-
-### 5. Connect Frame_Generator_V1 to ComfyUI
-
-Open **Setup** in Frame_Generator_V1.
-
-Keep:
-
-```text
-http://127.0.0.1:8188
-```
-
-Click **Save & Test Connection**, then **Refresh model lists**.
-
-## Usage
-
-1. Upload the **First frame**.
-2. Upload the **Last frame**.
-3. Write an **Action / motion prompt**.
-4. Select your checkpoint, IP-Adapter model, and CLIP Vision model.
-5. Set resolution, FPS, duration, seed, steps, CFG, conditioning, and consistency settings.
-6. Use **Preview One Frame** at 25%, 50%, or 75% before rendering a full sequence.
-7. Generate the PNG sequence.
-
-### Example prompt
-
-```text
-The girl slowly turns her head from left to right,
-her hair gently moving in the wind, natural pose progression,
-consistent character, clothing, camera, and background.
-```
-
-For a 2-second sequence at 12 FPS:
-
-```text
-24 total frames
-22 AI-generated in-between frames
-2 original endpoint frames
-```
-
-## Output
-
-A completed job creates:
+A completed generation can produce:
 
 ```text
 output/
@@ -192,38 +209,13 @@ output/
     └── frame_0024.png
 ```
 
-Runtime/output directories are ignored by Git and should not be committed.
+Generated output, logs, temporary inputs, virtual environments and Python cache files are intentionally excluded from Git.
 
-## GitHub repository layout
+---
 
-```text
-Frame_Generator_V1/
-├── app.py
-├── config.json
-├── requirements.txt
-├── install.bat
-├── run.bat
-├── install_ipadapter.bat
-├── LICENSE
-├── README.md
-├── CHANGELOG.md
-├── CONTRIBUTING.md
-├── CODE_OF_CONDUCT.md
-├── SECURITY.md
-├── THIRD_PARTY_NOTICES.md
-├── docs/
-│   └── MODELS.md
-├── workflows/
-│   └── README.txt
-└── .github/
-    └── ISSUE_TEMPLATE/
-```
+## 🧪 Development
 
-Model weights, generated images, logs, virtual environments, and Python cache files are intentionally excluded from the repository.
-
-## Development
-
-Create a virtual environment using the supplied `install.bat`, or manually:
+Create a virtual environment manually when needed:
 
 ```bat
 python -m venv .venv
@@ -231,7 +223,7 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 ```
 
-Run:
+Run the application:
 
 ```bat
 python app.py
@@ -243,14 +235,52 @@ Check syntax without launching the UI:
 python -m py_compile app.py
 ```
 
-## Project status
+---
 
-Frame_Generator_V1 is an **experimental local tool**. The core objective is controllable image-by-image keyframe generation from two endpoint images. Visual consistency can vary with the checkpoint, prompt, reference art, and conditioning settings.
+## 🛠️ Project Status
 
-This repository is intentionally focused on the local image-generation pipeline rather than video generation.
+**Experimental / active development**
 
-## License
+The project focuses on controllable, image-by-image generation between two endpoint images. Visual consistency can vary with the checkpoint, prompt, source artwork and conditioning settings.
 
-The Frame_Generator_V1 project code is released under the MIT License. See [`LICENSE`](LICENSE).
+The repository is intentionally focused on **local image generation rather than direct video generation**.
 
-Third-party software, model weights, and node packages remain under their own licenses and terms. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+---
+
+## 🗺️ Roadmap
+
+Planned refinement areas include:
+
+- stronger character and background consistency
+- improved motion distribution across the entire sequence
+- more controllable temporal conditioning
+- better handling of hands, hair and small moving details
+- additional SD / SDXL model profiles
+- improved previews and debugging
+- easier workflow/model setup
+
+---
+
+## 🤝 Contributing
+
+Contributions, experiments, workflow improvements and bug reports are welcome.
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) before opening a pull request.
+
+---
+
+## 📄 License
+
+The Frame_Generator_V1 project code is released under the **MIT License**.
+
+See [`LICENSE`](LICENSE).
+
+Third-party software, model weights and node packages remain under their own licenses and terms. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+
+---
+
+## ⭐ About
+
+Frame_Generator_V1 is a local AI experiment built around a simple idea:
+
+> **Use AI to create the images between two keyframes — one frame at a time.**
