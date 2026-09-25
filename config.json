@@ -1,0 +1,21 @@
+{
+  "comfyui_url": "http://127.0.0.1:8188",
+  "comfyui_timeout": 30,
+  "generation_timeout_seconds": 7200,
+  "default_resolution": "640x360",
+  "default_fps": 12,
+  "default_duration": 2.0,
+  "default_steps": 16,
+  "default_cfg": 6.0,
+  "default_denoise": 0.68,
+  "default_denoise_start": 0.36,
+  "default_denoise_peak": 0.68,
+  "default_endpoint_strength": 1.0,
+  "default_temporal_strength": 0.16,
+  "default_curve": "Smoothstep",
+  "default_model_family": "SD 1.5",
+  "low_vram": true,
+  "use_latent_guide": true,
+  "use_previous_frame": true,
+  "default_previous_guide_strength": 0.1
+}

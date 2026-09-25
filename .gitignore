@@ -1,0 +1,37 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# FrameForge runtime data
+output/
+logs/
+temp_inputs/
+
+# Local configuration / secrets
+*.local.json
+.env
+.env.*
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Large model files - never commit weights
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+*.onnx
+*.gguf
+*.ggml
+
+# Archives/build artifacts
+*.zip
+*.7z
+*.rar

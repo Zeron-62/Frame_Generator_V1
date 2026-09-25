@@ -1,0 +1,4 @@
+FrameForge v4 model guide
+
+The repository intentionally does not include model weights.
+See docs/MODELS.md for the official model sources and expected ComfyUI directories.
