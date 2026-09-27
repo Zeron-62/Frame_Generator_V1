@@ -635,9 +635,9 @@ def generate_one(
         if use_latent_guide:
             guide_path = make_morph_guide(first_path, last_path, t, width, height)
         else:
-            guide_path = prep_image(first_path, width, height)
+            guide_image = prep_image(first_path, width, height)
             guide_path = TMP_DIR / f"pure_first_{uuid.uuid4().hex[:10]}.png"
-            guide_path.save(guide_path, "PNG")
+            guide_image.save(guide_path, "PNG")
         first_ref = upload_image(first_path)
         last_ref = upload_image(last_path)
         guide_ref = upload_image(guide_path)
@@ -757,7 +757,7 @@ def generate_sequence(
             guide_path: Path | None = None
             if use_latent_guide:
                 guide_anchor = float(previous_guide_strength) if (use_previous_frame and previous_path is not None) else 0.0
-                guide_path = make_progressive_guide(first_path, last_path, previous_path, t, width, height, latent_anchor)
+                guide_path = make_progressive_guide(first_path, last_path, previous_path, t, width, height, guide_anchor)
             else:
                 # A first-frame initialization is still used as a stable latent; the image is generated from noise.
                 temp = prep_image(first_path, width, height)
