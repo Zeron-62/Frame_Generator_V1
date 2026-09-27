@@ -12,10 +12,10 @@
   "default_denoise_peak": 0.68,
   "default_endpoint_strength": 1.0,
   "default_temporal_strength": 0.16,
+  "default_previous_guide_strength": 0.1,
   "default_curve": "Smoothstep",
   "default_model_family": "SD 1.5",
   "low_vram": true,
   "use_latent_guide": true,
-  "use_previous_frame": true,
-  "default_previous_guide_strength": 0.1
+  "use_previous_frame": true
 }

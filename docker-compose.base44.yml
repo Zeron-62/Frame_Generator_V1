@@ -1,0 +1,17 @@
+services:
+  web:
+    image: python:3.11-slim
+    container_name: frameforge-web
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:7860"
+    # Install deps from the bind-mounted requirements.txt, then run the Gradio app.
+    # Code edits are picked up by restarting the service (Gradio has no file watcher);
+    # use `reload_preview` after edits, or `docker compose restart web`.
+    command: sh -c "pip install --no-cache-dir -r requirements.txt && python app.py"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GRADIO_SERVER_PORT=7860
+    restart: unless-stopped
